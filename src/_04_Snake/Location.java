@@ -18,9 +18,9 @@ public class Location {
 		return this.y;
 	}
 
-	public boolean positionsMatch(int x, int y)
+	public boolean positionsMatch(Location matchLocation)
 	{
-		if (x == this.x && y == this.y)
+		if (matchLocation.getX() == this.x && matchLocation.getY() == this.y)
 		{
 			return true;
 		}

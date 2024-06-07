@@ -134,12 +134,17 @@ public class SnakeGame implements ActionListener, KeyListener {
 	}
 
 	private void randomizeFoodLocation() {
-
+		Random rand = new Random();
+		Location loc = new Location(rand.nextInt(WIDTH), rand.nextInt(HEIGHT));
+		while(snake.isLocationOnSnake(loc))
+		{
+			loc = new Location(rand.nextInt(WIDTH), rand.nextInt(HEIGHT));
+		}
+		foodLocation = loc;
 		/*
 		 * Create a new Location object that is set to a random x and y values between 0
 		 * and the WIDTH and HEIGHT variables respectively.
 		 */
-
 
 		/*
 		 * Set the foodLocation equal to the Location object you just created.
@@ -151,14 +156,23 @@ public class SnakeGame implements ActionListener, KeyListener {
 	}
 
 	private void gameOver() {
-
+		timer.stop();
 		// Stop the timer.
-
+		int gameOverOption = JOptionPane.showOptionDialog(null, "Game Over\nPlay Again?", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, JOptionPane.YES_OPTION);
 		// Tell the user their snake is dead.
 
 		// Ask the user if they want to play again.
-
-
+		if (gameOverOption == 0)
+		{
+			snake.resetLocation();
+			randomizeFoodLocation();
+			timer.setDelay(250);
+			timer.start();
+		}
+		else
+		{
+			System.exit(0);
+		}
 		/*
 		 * If the user wants to play again, call the snake's resetLocation method and
 		 * this class's randomizeFoodLocation method then restart the timer. Otherwise,
@@ -169,20 +183,28 @@ public class SnakeGame implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		
 		// Call the snake's update method.
-
+		if (snake.isHeadCollidingWithBody() || snake.isOutOfBounds())
+		{
+			gameOver();
+		}
 		/*
 		 * If the snake's head is colliding with its own body or out of bounds call the
 		 * gameOver method.
 		 */
 
-
+		if (snake.getHeadLocation().positionsMatch(foodLocation))
+		{
+			snake.feed();
+			randomizeFoodLocation();
+		}
 		/*
 		 * If the location of the snake's head is equal to the location of the food,
 		 * feed the snake and randomize the food location.
 		 */
 
+		snake.update();
 		panel.repaint();
 	}
 }
